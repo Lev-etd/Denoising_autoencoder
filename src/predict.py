@@ -43,6 +43,6 @@ if __name__ == "__main__":
         "n_epochs": 15,
         "learning_rate": 1e-3,
         "test_path": f"{nb_dir}/splitted_data/clean_testset_wav",
-        "weights_path": f"{nb_dir}/weights/epoch_17_loss0.872458.pth"
+        "weights_path": f"{nb_dir}/weights_small/epoch_14_loss0.755454.pth"
     }
     main(config)
