@@ -54,7 +54,7 @@ def main(config):
     train_data = get_all_files(config.get("train_data"))
     val_data = get_all_files(config.get("val_data"))
 
-    model = Autoencoder(latent_dim=256, encoder_class=Encoder, decoder_class=Decoder)
+    model = Autoencoder(latent_dim=64, encoder_class=Encoder, decoder_class=Decoder)
     model.to(device)
 
     n = count_parameters(model)

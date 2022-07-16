@@ -35,7 +35,7 @@ def main(config):
 
     print(output)
 
-    sf.write('result_file.wav', output.cpu().detach().squeeze(), 16000)
+    sf.write('../result_file.wav', output.cpu().detach().squeeze(), 16000)
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ class Encoder(nn.Module):
         """
         super().__init__()
         self.linear = nn.Sequential(
-            nn.Linear(3 * 16 * n_channel, latent_dim),
+            nn.Linear(168, latent_dim),
             act_fn()
         )
         self.net = nn.Sequential(
@@ -26,17 +26,7 @@ class Encoder(nn.Module):
             act_fn(),
             nn.Conv1d(n_channel, n_channel, kernel_size=3, padding=1),
             act_fn(),
-            nn.Conv1d(n_channel, 2 * n_channel, kernel_size=3, stride=int(stride / 2), padding=1),
-            act_fn(),
-            nn.Conv1d(2 * n_channel, 2 * n_channel, kernel_size=3, padding=1),
-            act_fn(),
-            nn.Conv1d(2 * n_channel, 3 * n_channel, kernel_size=3, stride=int(stride / 2), padding=1),
-            act_fn(),
-            nn.Conv1d(3 * n_channel, 3 * n_channel, kernel_size=3, padding=1),
-            act_fn(),
-            nn.Conv1d(3 * n_channel, 3 * n_channel, kernel_size=3, stride=int(stride / 4), padding=1),
-            act_fn(),
-            nn.Conv1d(3 * n_channel, 3 * n_channel, kernel_size=3, padding=1),
+            nn.Conv1d(n_channel, 2 * n_channel, kernel_size=3, stride=int(stride / 4), padding=1)
         )
 
     def forward(self, x):
@@ -64,33 +54,20 @@ class Decoder(nn.Module):
         self.n_channel = n_channel
         super().__init__()
         self.linear = nn.Sequential(
-            nn.Linear(latent_dim, 3 * 16 * n_channel),
+            nn.Linear(latent_dim, 168),
             act_fn()
         )
         self.net = nn.Sequential(
-            nn.ConvTranspose1d(3 * n_channel, 3 * n_channel, kernel_size=3, output_padding=1,
-                               stride=int(stride / 4)),
-            act_fn(),
-            nn.Conv1d(3 * n_channel, 3 * n_channel, kernel_size=3, padding=1),
-            act_fn(),
-            nn.ConvTranspose1d(3 * n_channel, 2 * n_channel, kernel_size=3, output_padding=1,
-                               stride=int(stride / 2)),
-            act_fn(),
-            nn.Conv1d(2 * n_channel, 2 * n_channel, kernel_size=3, padding=1),
-            act_fn(),
-            nn.ConvTranspose1d(2 * n_channel, n_channel, kernel_size=3, stride=int(stride / 2), padding=1,
-                               output_padding=1),
+            nn.ConvTranspose1d(2 * n_channel, n_channel, kernel_size=3, output_padding=22, stride=int(stride / 4)),
             act_fn(),
             nn.Conv1d(n_channel, n_channel, kernel_size=3, padding=1),
             act_fn(),
-            nn.ConvTranspose1d(n_channel, n_input, kernel_size=80, stride=stride, padding=1, output_padding=10),
-            act_fn(),
-            nn.Conv1d(n_input, n_input, kernel_size=3, padding=1, )
+            nn.ConvTranspose1d(n_channel, n_input, kernel_size=80, stride=stride, output_padding=120)
         )
 
     def forward(self, x):
         x = self.linear(x)
-        x = x.view(-1, 3 * self.n_channel, 16)
+        x = x.view(-1, 24, 7)
         x = self.net(x)
         return x
 
